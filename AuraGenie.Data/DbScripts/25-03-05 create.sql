@@ -1,0 +1,33 @@
+﻿CREATE TABLE IF NOT EXISTS Messages
+(
+    Id             INTEGER PRIMARY KEY AUTOINCREMENT,
+    MessageContent TEXT    NOT NULL,
+    CreatedOn      REAL    NOT NULL,
+    SenderId       TEXT    NOT NULL,
+    RoomId         INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Rooms
+(
+    Id   INTEGER PRIMARY KEY AUTOINCREMENT,
+    Name TEXT NOT NULL
+);
+
+CREATE TABLE Users
+(
+    Id       INTEGER PRIMARY KEY AUTOINCREMENT,
+    Username TEXT NOT NULL,
+    AzureId  TEXT
+);
+
+INSERT INTO Users
+VALUES (1, 'Genie', NULL);
+
+CREATE TABLE IF NOT EXISTS AuraPointsLog
+(
+    Id        INTEGER PRIMARY KEY AUTOINCREMENT,
+    UserId    INTEGER NOT NULL,
+    Points    INTEGER NOT NULL,
+    CreatedOn REAL    NOT NULL,
+    FOREIGN KEY (UserId) REFERENCES Users (Id)
+);
