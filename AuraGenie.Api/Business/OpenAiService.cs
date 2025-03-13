@@ -36,11 +36,11 @@ Als naar een score stand gevraagd wordt, geef je altijd deze score terug. Als je
 Voor het optellen van scores mag je nooit naar een vorig bericht kijken. Bereken dit altijd opnieuw op basis van volgende data.
 {scoreList}
 ";
-        var yesterday = DateTime.UtcNow.Date.Subtract(TimeSpan.FromDays(1)).ToUnixTime();
+        var thisMorning = DateTime.UtcNow.Date.ToUnixTime();
         var messagesOfToday = await _ctx.Messages.Where(x => x.RoomId == m.RoomId
                                                              && m.Id != x.Id
                                                              && x.CreatedOn < m.CreatedOn
-                                                             && x.CreatedOn > yesterday)
+                                                             && x.CreatedOn > thisMorning)
             .OrderByDescending(x => x.CreatedOn).Take(20)
             .ToListAsync();
         messagesOfToday = messagesOfToday.OrderBy(x => x.CreatedOn).ToList();
@@ -123,10 +123,11 @@ Voor het optellen van scores mag je nooit naar een vorig bericht kijken. Bereken
         var completion = await CreateRequestForMessage(m);
         var messageContent = completion.Content[0].Text;
 
-        messageContent = messageContent.Replace("```json", "");
+        messageContent = messageContent.Replace("```json", "", StringComparison.OrdinalIgnoreCase);
+        messageContent = messageContent.Replace("JSON:", "", StringComparison.OrdinalIgnoreCase);
         messageContent = messageContent.Replace("```", "");
-        messageContent = messageContent.Replace("Verteller: Genie", "");
-        messageContent = messageContent.Replace("Bericht:", "");
+        messageContent = messageContent.Replace("Verteller: Genie", "", StringComparison.OrdinalIgnoreCase);
+        messageContent = messageContent.Replace("Bericht:", "", StringComparison.OrdinalIgnoreCase);
         messageContent = messageContent.Trim();
 
         // Extract json object
